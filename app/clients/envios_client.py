@@ -3,7 +3,7 @@ import httpx
 
 from .errors import ServiceError
 
-ENVIOS_SERVICE_URL = os.getenv("ENVIOS_SERVICE_URL", "http://localhost:8080")
+ENVIOS_SERVICE_URL = os.getenv("ENVIOS_SERVICE_URL", "http://localhost:8003")
 
 
 async def obtener_envio_por_codigo(codigo: str) -> dict:
