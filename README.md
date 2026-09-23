@@ -4,6 +4,40 @@ Microservicio de Tracking del sistema de Logística y Entregas (CS2032 - Cloud
 Computing). **No tiene base de datos propia**: solo consume a `ms-clientes`
 y a `ms-envios` (svc-shipments) para armar el detalle completo de un envío.
 
+## Descripción
+
+`svc-tracking` es el microservicio "orquestador" del proyecto: no guarda
+información propia, su única función es **consultar a otros microservicios
+y combinar sus respuestas** en un solo resultado, listo para que el frontend
+muestre el seguimiento de un envío sin tener que hacer varias llamadas por
+su cuenta.
+
+Cuando alguien pide el tracking de un envío, `svc-tracking`:
+
+1. Le pregunta a **ms-envios** (`svc-shipments`) el estado del envío: en qué
+   punto va, a qué dirección se entrega, y qué vehículo/conductor lo tiene
+   asignado.
+2. Le pregunta a **ms-clientes** (`svc-clients`) los datos del cliente dueño
+   de ese envío (nombre, email, teléfono).
+3. Junta ambas respuestas en un único JSON y lo devuelve.
+
+```
+                 ┌──────────────┐
+   Frontend ───▶ │ svc-tracking │
+                 └──────┬───────┘
+                        │
+          ┌─────────────┼─────────────┐
+          ▼                           ▼
+   ms-envios (svc-shipments)    ms-clientes (svc-clients)
+   estado, items, dirección     nombre, email, teléfono
+   de entrega, vehículo y       del cliente
+   conductor asignados
+```
+
+No se conecta con `ms-vehiculos` directamente: el vehículo/conductor
+asignado ya viene incluido (como snapshot) dentro de la respuesta de
+`ms-envios`, así que no hace falta consultarlo aparte.
+
 ## Endpoints
 
 | Método | Ruta                          | Descripción                                              |
