@@ -24,6 +24,8 @@ class VehiculoAsignado(BaseModel):
     tipo: Optional[str] = None
     marca: Optional[str] = None
     modelo: Optional[str] = None
+    estado: Optional[str] = None
+    capacidadKg: Optional[float] = None
 
 
 class ConductorAsignado(BaseModel):
@@ -32,6 +34,8 @@ class ConductorAsignado(BaseModel):
     apellido: str
     dni: Optional[str] = None
     turno: Optional[str] = None
+    activo: Optional[bool] = None
+    telefono: Optional[str] = None
 
 
 class ClienteResumen(BaseModel):
@@ -50,9 +54,13 @@ class ClienteResumen(BaseModel):
 
 class TrackingOut(BaseModel):
     """
-    Detalle completo de un envío: junta lo que ya trae el documento de
-    ms-envios (estado, snapshot de dirección/vehículo/conductor) con los
-    datos del cliente consultados en vivo a ms-clientes.
+    Detalle completo de un envío: junta ms-envios (estado, dirección,
+    items), ms-clientes (destinatario) y ms-vehiculos (estado vivo de
+    flota y conductor).
+
+    TODO(frontend-mapa): cuando el front pinte el envío en un mapa
+    (Google Maps / Mapbox), agregar acá una ubicación actual (lat/lng)
+    o una polyline simulada para trackear el recorrido.
     """
 
     codigoSeguimiento: str
